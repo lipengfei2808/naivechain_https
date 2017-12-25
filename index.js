@@ -1,5 +1,6 @@
 let outputTag=$("#output")[0];
 let host=$("#host")[0].value;
+let protocal='http';
 let port=$("#port")[0].value;
 let index=1;
 let getStatus=({status})=>{
@@ -20,6 +21,10 @@ Rx.Observable.fromEvent($("#port")[0],'keyup')
 .subscribe((e)=>{
   port=e.target.value;
 })
+Rx.Observable.fromEvent($("[name=protocal]"),'change')
+.subscribe((e)=>{
+  protocal=e.target.value;
+})
 //=================
 //  send Data
 //=================
@@ -29,13 +34,13 @@ Rx.Observable.fromEvent($("#sendBtn")[0],'click')
   $("#sendData")[0].value=''
   
   outputTag.value=
-  `${outputTag.value}<= send to http://${host}:${port}/mineBlock,\n`
+  `${outputTag.value}<= send to ${protocal}://${host}:${port}/mineBlock,\n`
   +`<= mothod: POST,\n`
   +`<= body: {"data":"${data}"}\n\n`;
 
   outputTag.scrollTop = outputTag.scrollHeight;
 
-  return Rx.Observable.ajax({url:`http://${host}:${port}/mineBlock`, method: 'POST', headers: {
+  return Rx.Observable.ajax({url:`${protocal}://${host}:${port}/mineBlock`, method: 'POST', headers: {
     'Content-Type': 'application/json',
     } ,body:{data:data}});
 })
@@ -54,13 +59,13 @@ Rx.Observable.fromEvent($("#addPeerBtn")[0],'click')
   $("#peeripport")[0].value='';
   
   outputTag.value=
-  `${outputTag.value}<= send to http://${host}:${port}/addPeer,\n`
+  `${outputTag.value}<= send to ${protocal}://${host}:${port}/addPeer,\n`
   +`<= mothod: POST,\n`
   +`<= body: {"peer":"ws://${peeripport}"}\n\n`;
 
   outputTag.scrollTop = outputTag.scrollHeight;
 
-  return Rx.Observable.ajax({url:`http://${host}:${port}/addPeer`, method: 'POST', headers: {
+  return Rx.Observable.ajax({url:`${protocal}://${host}:${port}/addPeer`, method: 'POST', headers: {
     'Content-Type': 'application/json',
     } ,body:{peer:`ws://${peeripport}`}});
 }).catch((error)=>{
@@ -72,7 +77,7 @@ Rx.Observable.fromEvent($("#addPeerBtn")[0],'click')
 //  get info
 //=================
 Rx.Observable.interval(1000).mergeMap(()=>{
-  let getblock=Rx.Observable.ajax(`http://${host}:${port}/blocks`);
+  let getblock=Rx.Observable.ajax(`${protocal}://${host}:${port}/blocks`);
   return getblock
 }).catch((error)=>{
   error.response=[]
@@ -80,7 +85,7 @@ Rx.Observable.interval(1000).mergeMap(()=>{
 }).mergeMap(({response})=>{
   response.reverse();
   $("#blockchain")[0].value=JSON.stringify(response,null,3)
-  let getPeer=Rx.Observable.ajax(`http://${host}:${port}/peers`);
+  let getPeer=Rx.Observable.ajax(`${protocal}://${host}:${port}/peers`);
   return getPeer;
 }).catch((error)=>{
   error.response=[]

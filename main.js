@@ -84,7 +84,7 @@ var initHttpServer = () => {
   app.listen(http_port, () => console.log(`Listening http on port: ${http_port}`));
   
   //https
-  credentials && httpsServer.listen(https_port, () => console.log(`Listening http on port: ${https_port}`));
+  credentials && httpsServer.listen(https_port, () => console.log(`Listening https on port: ${https_port}`));
 };
 
 
